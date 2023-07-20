@@ -12,8 +12,6 @@
 #include <string.h>
 #include <time.h>
 
-#define IPV6
-
 static void socket_close(int sock);
 static bool socket_is_valid(int sock);
 static int socket_get_error(void);
@@ -22,11 +20,7 @@ int main(void) {
     printf("Configuring local address....\n");
     struct addrinfo hints;
     memset(&hints, 0, sizeof(hints));
-#ifdef IPV6
     hints.ai_family = AF_INET6;
-#else
-    hints.ai_family = AF_INET;
-#endif
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 
@@ -39,6 +33,13 @@ int main(void) {
     if (!socket_is_valid(socket_listen)) {
         int error = socket_get_error();
         fprintf(stderr, "socket() failed: %s (%d)\n", strerror(error), error);
+        return EXIT_FAILURE;
+    }
+
+    printf("Configuring dual-stack...\n");
+    int option = 0;
+    if (setsockopt(socket_listen, IPPROTO_IPV6, IPV6_V6ONLY, &option, sizeof(option))) {
+        fprintf(stderr, "setsockopt() failed. (%d)\n", socket_get_error());
         return EXIT_FAILURE;
     }
 
