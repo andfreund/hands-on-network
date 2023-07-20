@@ -39,7 +39,8 @@ int main(void) {
     printf("Configuring dual-stack...\n");
     int option = 0;
     if (setsockopt(socket_listen, IPPROTO_IPV6, IPV6_V6ONLY, &option, sizeof(option))) {
-        fprintf(stderr, "setsockopt() failed. (%d)\n", socket_get_error());
+        int error = socket_get_error();
+        fprintf(stderr, "setsockopt() failed: %s (%d)\n", strerror(error), error);
         return EXIT_FAILURE;
     }
 
