@@ -9,3 +9,7 @@ add_executable(time-server
 add_executable(time-server-dual
     ${CMAKE_CURRENT_LIST_DIR}/time_server_dual.c
 )
+
+add_executable(tcp-client
+    ${CMAKE_CURRENT_LIST_DIR}/tcp_client.c
+)

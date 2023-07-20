@@ -20,16 +20,12 @@ static int socket_get_error(void);
 
 int main(void) {
     printf("Configuring local address....\n");
-    struct addrinfo hints;
-    memset(&hints, 0, sizeof(hints));
+    struct addrinfo hints = { .ai_socktype = SOCK_STREAM, .ai_flags = AI_PASSIVE };
 #ifdef IPV6
     hints.ai_family = AF_INET6;
 #else
     hints.ai_family = AF_INET;
 #endif
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-
     struct addrinfo* bind_address;
     getaddrinfo(NULL, "8080", &hints, &bind_address);
 
